@@ -1,0 +1,17 @@
+extends base
+include mixins/video
+
+block content 
+    h2 Welcome here You will see Trending Videos!
+        each potato in videos
+            //- div 
+            //-     h4=video.title
+            //-     ul 
+            //-         li #{video.rating}/5
+            //-         li #{video.comments} commetns 
+            //-         li Posted #{createdAt}
+            //-         li #{video.views} views.
+            //- 앞으로 자주 쓸거라서 반복하기 싫다. mixin쓰자
+            +video(potato)
+        else 
+            li sorry Not Found .

@@ -1,0 +1,7 @@
+extends base
+
+block content
+    h3 #{video.views} #{video.views === 1 ? "view" : "views"}
+    //- 단수, 복수 구분해준다. if조건문대신 이렇게 쓸 수도 있다.
+    a(href=`${video.id}/edit`) Edit Video &larr; 
+    

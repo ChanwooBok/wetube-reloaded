@@ -1,0 +1,12 @@
+extends base
+
+
+block content
+    form(method = "POST" , action = "/videos/upload")
+    
+        input( name = "title" , placeholder="Title" , required, type="text")
+        input(type="submit", value = "Upload Video") 
+        //- Upload video를 누르는 순간, post request 를 우리의 /videos/upload url에 보낸다.
+
+    //- form의 action 기본값은 현재 머물고있는 위치이다. 즉, 여기서는 /videos/upload이다. 
+    
