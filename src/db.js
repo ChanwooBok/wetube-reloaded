@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
 
-mongoose.connect("mongodb://127.0.0.1:27017/wetube" ,
- { useNewUrlParser: true , useUnifiedTopology: true,
- });
+// console.log(process.env.COOKIE_SECRET);
 
- 
+mongoose.connect("mongodb://127.0.0.1:27017/wetube" ,
+ {  useNewUrlParser: true , 
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+ });
+//mongoose가 오래된 것들을 처리하는 방법이라 warning에서 시키는대로 할 수 밖에 없는것이다.
+
 const db = mongoose.connection;
 // mongoose가 우리의 데이터베이스가 mongodb에 연결된 connection에 대한 액세스를 줬다.
 

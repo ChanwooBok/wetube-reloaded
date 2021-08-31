@@ -1,0 +1,31 @@
+extends base
+
+block content
+    if errorMessage
+        span=errorMessage
+    if (errorMessages !== null ) 
+        span(style = "color : red")=errorMessages 
+    img(src="/"+loggedInUser.avatarUrl, width="100",heigt="100")
+    //- "/"을 붙여주지 않으면 , relative Url 이 되어 현재위치인 /users/uploas/이미지명 이 되버린다.
+    //- "/"을 붙여주면, /uploads/이미지명 이 된다. -> 그래도 그림이 안보이는 이유: express한테 /uploads/이미지명 router을 만들어주지 않았기 떄문.
+    form(method="POST", enctype = "multipart/form-data" )
+        label(for="avatar") Avatar
+        input(type="file",id="avatar", name = "avatar",accept="image/*")
+        //- image/* : jpeg,png 등은 모두 허용한다는 의미.
+        input(placeholder="name",name= "name", type="text", value = loggedInUser.name)
+        input(placeholder="email",name= "email", type="email", value = loggedInUser.email)
+        input(placeholder="username",name= "username", type="text", value = loggedInUser.username)
+        input(placeholder="location",name= "location", type="text", value = loggedInUser.location)
+        input(type="submit", value="Update Profile")
+        if( !loggedInUser.socialOnly )
+            hr
+            a(href="change-password") Change password &rarr;
+            //- res.local.loggedInUser 에 user값을 받아오고 있으므로,pug에서는 loggedInUser만 쓰면 local에 접근가능( 복습 )
+        //- 현재 이 pug파일은 /users에 머무르고 있으므로, 따로 /users/change-password 안하고 생략가능하다. 
+
+
+    //- form의 action은 같은 url에 post request 갈것이다. 그러니 따로 action을 써주지 않아도됨.(기본값이 같은url임) (여기서는 /users/edit)
+    //- middlewares에서 loggedInUser가 session의 user를 받아오고 있으므로, pug는 local에 접근가능한걸 이용해서 그냥 loggedInUser을 써주면 된다.
+    //-  user가 post request를 보내면 body를 받을 수 있다. (req.body로 받을 수 있음.)
+
+    //- enctype = "multipart/form-data"  : 우리 form 이 다르게 인코딩 될거란 의미. 파일을 백엔드로 보내서 업로드하기 위한 필수사항임.

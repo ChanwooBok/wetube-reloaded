@@ -2,7 +2,10 @@ extends base
 
 
 block content
-    h4 Change Title of Video
+    h4 Update your Video
     form(method="POST") 
-        input(name = "potato", placeholder = "Video Title",value = video.title, required)
+        input(name = "title", placeholder = "Video Title",value = potato.title, required)
+        input( name = "description" , placeholder="Description" , required, type="text",minlength=20, value= potato.description)
+        input( name = "hashtags" , placeholder="Hashtags, separated by comma." , required, type="text" value=potato.hashtags.join())
+        //- hashtags는 우리가 array로 만들어줘서 input에 array형태로 나와버린다. 따라서 string으로 바꿔줘야하는데 , join()이 그 역할을 한다.
         input(value = "Save" , type = "submit") 

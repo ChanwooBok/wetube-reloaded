@@ -1,5 +1,6 @@
 import express from "express";
-import {watch,getEdit,postEdit, getUpload, postUpload} from "../controllers/videoController.js";
+import {watch,getEdit,postEdit, getUpload, postUpload , deleteVideo} from "../controllers/videoController.js";
+import { protectorMiddleware, videoUpload } from "../middlewares.js";
 
 
 const videoRouter = express.Router();
@@ -11,16 +12,19 @@ const videoRouter = express.Router();
 // 원칙적으로 upload란 문자도 id가 될 수 있기때문이다.
 // <해결법> -> 그렇다면 원칙적으로 id에는 숫자만 오도록 정규식을 쓰면 upload를 
 // 나중에 써도 무방해진다.
-videoRouter.get("/:id(\\d+)",watch);
+
+videoRouter.get("/:id([0-9a-f]{24})",watch);
 // :의 의미는 variable 이다.
+// 0부터 9까지 , a부터 f까지의 string 24개를 찾는것.
+videoRouter.route("/:id([0-9a-f]{24})/edit").all(protectorMiddleware).get(getEdit).post(postEdit);
 // (\\d+) 정규식 : d는 숫자, +는 얼마든지 무한히 와도 됨.
+videoRouter.get("/:id([0-9a-f]{24})/delete",protectorMiddleware,deleteVideo);
 
 
-videoRouter.get("/:id(\\d+)/edit",getEdit);
-videoRouter.post("/:id(\\d+)/edit",postEdit);
+videoRouter.route("/upload").all(protectorMiddleware).get(getUpload).post(videoUpload.single("video"),postUpload);
+// route로 위 한줄로 짧게 가능
 // videoRouter.get("/upload",getUpload);
 // videoRouter.post("/upload",postUpload);
-videoRouter.route("/upload").get(getUpload).post(postUpload);
 
 
 

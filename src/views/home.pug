@@ -2,7 +2,6 @@ extends base
 include mixins/video
 
 block content 
-    h2 Welcome here You will see Trending Videos!
         each potato in videos
             //- div 
             //-     h4=video.title
@@ -15,3 +14,4 @@ block content
             +video(potato)
         else 
             li sorry Not Found .
+            //- 여기 else 구문은 JS 가 아닌, pug만의 문법이다.

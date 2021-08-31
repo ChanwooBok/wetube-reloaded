@@ -1,1 +1,4 @@
 /node_modules
+.env
+/uploads
+# gitignore에 있는것들은 깃에 퍼블리시 되지 않는다.

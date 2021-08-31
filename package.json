@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "The best way to watch a video",
   "scripts": {
-    "dev": "nodemon --exec babel-node src/init.js"
+    "dev": "nodemon --exec babel-node src/init.js",
+    "assets": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -16,15 +17,25 @@
   },
   "homepage": "https://github.com/ChanwooBok/wetube-reloaded#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "connect-mongo": "^4.5.0",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.2",
     "mongoose": "^5.13.7",
     "morgan": "^1.10.0",
-    "pug": "^3.0.2"
+    "multer": "^1.4.3",
+    "node-fetch": "^2.6.1",
+    "pug": "^3.0.2",
+    "session": "^0.1.0",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@babel/node": "^7.14.9",
     "@babel/preset-env": "^7.15.0",
+    "babel-loader": "^8.2.2",
     "nodemon": "^2.0.12"
   },
   "type": "module"

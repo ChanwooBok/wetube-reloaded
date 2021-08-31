@@ -1,12 +1,22 @@
 extends base
 
 
-block content
-    form(method = "POST" , action = "/videos/upload")
+block content 
+    if errorMessage
+        span=errorMessage
     
-        input( name = "title" , placeholder="Title" , required, type="text")
+    form(method = "POST", enctype ="multipart/form-data")
+        label(for="video") Video File 
+        input(type="file",accept="video/*",required,id="video",name = "video") 
+        input( name = "title" , placeholder="Title" , required, type="text",maxlength=80)
+        input( name = "description" , placeholder="Description" , required, type="text",minlength=20)
+        //- video.js에도 videoschema에 길이제약을 걸었늗네 여기서 또 거는 이유:
+        //- 해킹당했을때 html인 upload.pug는 변경가능하더라도 Video.js 자바스크립트파일에서 제약을 걸어놨기 때문에 최대,최소글자를 변형한 비정상적인 업로드는 불가능하다.
+        //- 즉, 보안성을 증가시킨것임
+        input( name = "hashtags" , placeholder="Hashtags, separated by comma." , required, type="text")
+        //- 모든 input은 name을 가져야 
         input(type="submit", value = "Upload Video") 
         //- Upload video를 누르는 순간, post request 를 우리의 /videos/upload url에 보낸다.
 
-    //- form의 action 기본값은 현재 머물고있는 위치이다. 즉, 여기서는 /videos/upload이다. 
+    //- form의 action 기본값은 현재 머물고있는 화면의 url이다. 즉, 여기서는 /videos/upload이다. 
     
