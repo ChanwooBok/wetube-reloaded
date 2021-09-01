@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "The best way to watch a video",
   "scripts": {
-    "dev": "nodemon --exec babel-node src/init.js",
+    "dev": "nodemon",
     "assets": "webpack --config webpack.config.js"
   },
   "repository": {
@@ -22,13 +22,13 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "mini-css-extract-plugin": "^2.2.1",
     "mongoose": "^5.13.7",
     "morgan": "^1.10.0",
     "multer": "^1.4.3",
     "node-fetch": "^2.6.1",
     "pug": "^3.0.2",
     "session": "^0.1.0",
-    "webpack": "^5.51.1",
     "webpack-cli": "^4.8.0"
   },
   "devDependencies": {
@@ -36,7 +36,12 @@
     "@babel/node": "^7.14.9",
     "@babel/preset-env": "^7.15.0",
     "babel-loader": "^8.2.2",
-    "nodemon": "^2.0.12"
+    "css-loader": "^6.2.0",
+    "nodemon": "^2.0.12",
+    "sass": "^1.38.2",
+    "sass-loader": "^12.1.0",
+    "style-loader": "^3.2.1",
+    "webpack": "^5.51.1"
   },
   "type": "module"
 }

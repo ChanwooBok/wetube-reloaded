@@ -5,6 +5,7 @@ html(lang="ko")
         //- base.pug를 rendering 하는곳가서 pageTitle변수를 지정해준다.
         link(rel="stylesheet" href="https://unpkg.com/mvp.css")
         //- 글씨체를 기본적으로 멋지게 꾸며준다.
+        link(rel="stylesheet", href="/static/css/styles.css")
     body
         header
             h1=pageTitle
@@ -39,3 +40,5 @@ html(lang="ko")
         main
             block content
     include partials/footer
+    script(src="/static/js/main.js")
+    //- 우리가 client에 세련된 코드를 짜면 webpack 이 그걸처리해서 assets폴더로 코드를 압축시켜 보내고 pug는 assets폴더를 읽어 화면에 띄운다

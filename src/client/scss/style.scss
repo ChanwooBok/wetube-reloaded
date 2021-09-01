@@ -1,0 +1,8 @@
+@import "./_variables";
+
+body{
+    background-color:$red;
+    color: $color;  
+}
+
+// webpack이 scss를 babel loader를 통하여 css로 변경한 후, 브라우저의 head에 추가시켜줌.

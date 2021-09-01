@@ -84,6 +84,11 @@ app.use("/users",userRouter);
 app.use("/uploads",express.static("uploads"));
 // browser에서 어느 폴더에나 접근할 수 있게하면 보안에 취약해지기 떄문에, 접근가능한 폴더릉 static() 안에 지정해준다.
 
+// < webpack>
+app.use("/static",express.static("assets"));
+// express한테 assets폴더를 유저들에게 보여주도록 요청하는것,.
+
+
 const home = (req,res) => {
     console.log("I will respond!");
     return res.send("hello");
