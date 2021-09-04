@@ -24,7 +24,7 @@ import Video from "../models/Video.js";
 //  <promise를 사용하는 방식>
 
 export const home = async(req,res) => {
-    const videos = await Video.find({});
+    const videos = await Video.find({}).sort({createdAt:"desc"}).populate("owner");
     return res.render("home", {pageTitle : "Home" , videos});
     // return은 여기서 없어도 그만. 단지, function이 render작업후 바로 종료시켜 그 밑에 로그는 실행되지 않게한다.
     //promise를 사용하는경우 , await가 database 서칭을 마칠때까지 기다려주기때문에,
@@ -46,7 +46,7 @@ export const watch = async(req,res) => {
     const potato = await Video.findById(id).populate("owner");
     // mongoose가 video를 찾고 , owner 가 ObjectId이며, id가 User에서 온 것도 알고 있으며, owner의 전체 객체  User object를 가져와준다.-> 우리는 user의 구체적인 정보까지 한줄의 코드로 알 수 있다.
     // populate를 하기전에는 owner은 단지, String타입의 objectId 일 뿐이다.
-    // const owner = await User.findById(potato.owner); 코드반복을 줄여보자.
+    // const owner = await User.findById(potato.owner); ->너무 번거로운 코드반복을 줄일  수 있는것이다.
 
     
     if(potato === null ){
@@ -159,6 +159,21 @@ export const postUpload = async(req,res) => {
 export const login = (req,res) => res.send("login!");
 export const deleteVideo = async(req,res) => {
     const { id } = req.params;
+    // 현재 접속한 video의 url 
+    const { 
+        session: {
+            user: {_id},
+        },
+    }= req;
+    const potato = await Video.findById(id);
+    if(!potato){
+        return res.status(404).render("404",{pageTitle: "Video Not Found"});
+    }
+    if( String(potato.owner) !== String(_id)){
+        // 두개는 object와 string으로 타입이 다르다. !==는 데이터타입까지 비교하므로 형변환해주기.
+        return res.status(403).redirect("/");
+        // 403: forbidden code
+    }
     await Video.findByIdAndDelete(id);
     return res.redirect("/");
 }
@@ -181,7 +196,7 @@ export const search = async(req,res) => {
                 // `^${keyword}` : keyword 로 시작하는 비디오를 찾아줌.
                 //`${keyword}$` : keyword로 끝나는 비디오를 찾아줌.
             }
-        });
+        }).populate("owner");
     }
     return res.render("search", {pageTitle : "Search" , videos});
 }

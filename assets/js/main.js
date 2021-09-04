@@ -26,7 +26,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extr
   \*******************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _scss_style_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../scss/style.scss */ \"./src/client/scss/style.scss\");\n\nalert(\"it works!\"); // 브라우저가 이거를 실행하게 하려면 webpack에 이걸 전달해서 ugly한 브라우저가 알아듣는 코드로 바꿔줘야 함.\n// client 폴더는  webpack이 처리하기 전, assets폴더는 처리 후의 파일이 담기는 폴더다\n\n//# sourceURL=webpack://wetube/./src/client/js/main.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _scss_style_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../scss/style.scss */ \"./src/client/scss/style.scss\");\n\nconsole.log(\"main!\"); // 브라우저가 이거를 실행하게 하려면 webpack에 이걸 전달해서 ugly한 브라우저가 알아듣는 코드로 바꿔줘야 함.\n// client 폴더는  webpack이 처리하기 전, assets폴더는 처리 후의 파일이 담기는 폴더다\n\n//# sourceURL=webpack://wetube/./src/client/js/main.js?");
 
 /***/ })
 

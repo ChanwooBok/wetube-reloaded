@@ -86,6 +86,7 @@ app.use("/uploads",express.static("uploads"));
 
 // < webpack>
 app.use("/static",express.static("assets"));
+// /static url 로 접근하면 assets폴더접근 권한을 부여한다.
 // express한테 assets폴더를 유저들에게 보여주도록 요청하는것,.
 
 

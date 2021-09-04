@@ -8,12 +8,12 @@ block content
         input(placeholder="password",name= "password", type="password", required)
         input(type="submit",value="login")
         br
+        include partials/social-login
         //- a(href="https://github.com/login/oauth/authorize?client_id=bbdce9f9f2c8a42f18bf&allow_signup=false&scope=user:email") Continue with github &rarr;
         //-  위에껀 너무 길다. 실수하기 좋음. 차라리 프로답게 가자
-        a(href="/users/github/start") Continue with Github &rarr; 
+        //- a(href="/users/github/start") Continue with Github &rarr; 
         //- 만약,내 사이트에서 가입한 계정이  없을때, github에 연동된 소셜로그인을 할 수 있게 하는 기능.
         //- 이 경우, 소셜 github에 가입된 이메일만으로 로그인하는거고, password는 없다.
-    hr
-    div
-        span Don't have an account? 
-        a(href="/join") Create Now ! &rarr; 
+        div.auth-switch
+            span Don't have an account? 
+            a(href="/join") Create Now ! &rarr; 

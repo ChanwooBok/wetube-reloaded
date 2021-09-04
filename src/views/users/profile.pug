@@ -2,12 +2,16 @@ extends ../base
 include ../mixins/video
 //- 현재 users라는 폴더안에 위치하므로 ../을 써서 밖으로 나가주자.
 
-block content 
-        each video in user.videos 
-            +video(video)
-        else 
-            li sorry Not Found .
-            
+block content   
+        div.profile__data
+            img(src="/"+user.avatarUrl).avatar
+            h3=user.name
+        div.video-grid
+            each video in user.videos 
+                +video(video)
+            else  
+                span.empty__message No videos found
+                
 //-  profile을 render할때 , 변수로 videos라는 array 를 보내주고, 각각을 꺼내쓴다.
 //- mixin으로 귀찮은 반복을 피한다.
         

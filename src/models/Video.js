@@ -13,6 +13,8 @@ const videoSchema = new mongoose.Schema( {
     },
     owner: {type: mongoose.Schema.Types.ObjectId, required:true, ref: "User"},
     // type에 objectId는 없다. mongoose가 우리르 도와주게 하려면, 이렇게 써야하고, ref로 User model에서 온것이라고 적어줘야 한다.
+    // 영상소유자의 id를 Video에 저장하는게 이렇게나 효과적이다.
+    // video는 하나의 owner를 갖지만, owner는 여러개의 video를 가질 수 있다.
 });
 
 videoSchema.static('formatHashtags', function(hashtags) {

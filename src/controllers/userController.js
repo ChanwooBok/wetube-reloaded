@@ -265,6 +265,7 @@ export const postEdit = async(req,res) => {
         {
         avatarUrl: file ? file.path : avatarUrl,
         // edit profile시 , 프로필사진은 변경하지 않았을경우 avatarUrl 이 undefined라고 뜨는 오류해결 위한 코드.
+        // file이 있을시, file.path 없을 시 avatarUrl 그대로 쓰기.
         // input에 파일을 올렸을경우, req.file이 생겨서, file.path 를 쓸 수 있지만 file없을경우 기존의 프사였던 avatarUrl을 그대로 쓴다.
         name,
         email,
@@ -282,16 +283,12 @@ export const postEdit = async(req,res) => {
         // }else{
         //     뭐 하나라도 다르다면,  그 다른 항목에 대해서만
         //     const existInfo = await User.exists({ $or : [ {email},{username}]});
-
         // }
-
         // const existInfo = await User.exists({ $or : [ {email},{username}]});
         //그냥 이렇게만 적으면 안되는 이유: 여러가지 항목중 user가 업데이트 하려는 항목이 무엇인지 먼저 체크해야한다.
         // 왜냐하면, 체크를 안하면, user가 이 세가지 모두 edit하지 않은경우에는, input의 value값이 session값과 같기때문에 항상 true값을 반환한다.
         // 그렇다면, session의 정보와 user가 form request한 정보를 비교해서 바뀐 항목을 찾아야 한다. 그게 user가 바꾸고자 하는 항목
         // 그 항목 중에서 이미 존재하는 database와의 값을 비교해야, 이미 존재하는 정보라고 경고를 보낼 수 있는 것이다. ( username과 email은 중복되면 안되는 unique한 항목이므로)
-        
-
     return res.redirect("/users/edit");
 };
 
@@ -344,9 +341,17 @@ export const see = async(req,res) => {
     //const id = req.params.id;  --> id는 url에서 따왔다.-> 현재 접속한 브라우저의 고유의 id
     // session에서 id 를 가져오지 않은 이유 : my profile페이지는 누구나 접근 가능한 public페이지로 만들거기 때문.
     // 마치 인스타에서 누구나 남에 프로필을 방문할 수 있는것처럼..
-    const user = await User.findById(id).populate("videos");
-    // User모델에는 videos라는 array항목이 있으므로,  mongoose가 알아서 videos를 쭉 가져와 보여줄것이다.
-    console.log(user);
+    const user = await User.findById(id).populate({
+        path:"videos",
+        populate: {
+            path:"owner",
+            model:"User",
+        },
+    });
+    // User모델에는 videos라는 array항목이 있으므로,  mongoose가 알아서 videos object를 쭉 가져와 보여줄것이다.
+    // 근데, videos만 populate하면 owner에 대한 정보가 없어서 누가 업로드한건지 표시할 수 없다.
+    // 따라서, double populate 한다 . 첫번째 path는 처음 populate하고 싶은거, 두번째 원하는건 다음 populate에 쓴다.
+    // 더불어, model도 무엇인지 표시해준다.
     if ( !user){
         return res.status(404).render("404",{pageTitle: "User Not found."});
     }
@@ -356,7 +361,7 @@ export const see = async(req,res) => {
     // 현재 접속한 url 에 있는 id로 user를 찾고 그 user의 id로 등록된 video를 찾는다.
     return res.render("users/profile",{
         pageTitle: user.name,
-        user,   //user로 줄여 쓸 수도 있음.
+        user : user,   //user로 줄여 쓸 수도 있음.
         // videos,
     });
 }

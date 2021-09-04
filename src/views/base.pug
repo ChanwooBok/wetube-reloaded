@@ -3,42 +3,15 @@ html(lang="ko")
     head
         title #{pageTitle} | #{siteName}
         //- base.pug를 rendering 하는곳가서 pageTitle변수를 지정해준다.
-        link(rel="stylesheet" href="https://unpkg.com/mvp.css")
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+        //- link(rel="stylesheet" href="https://unpkg.com/mvp.css")
         //- 글씨체를 기본적으로 멋지게 꾸며준다.
         link(rel="stylesheet", href="/static/css/styles.css")
     body
-        header
-            h1=pageTitle
-            //- h1 who is sexy? #{sexy}
-            //- pug는 session에 접근할 수는 없지만, local에는 무료로 접근할 수 있다.
-            //- 즉, local object는 이미 모든 pug template에 import된 object이다.
-            //- h1=pageTitle 처럼 =로 표시할 수 있는 것은 다른곳에서 선언한 변수일때 가능!
-            nav
-                ul 
-                    li
-                        a(href="/") Home       
-                    li
-                        a(href="/search") Search    
-                    if loggedIn 
-                        li
-                            a(href=`/users/${loggedInUser._id}`) My profile
-                        li
-                            a(href="/videos/upload") Upload Video
-                    
-                        li
-                            a(href="/users/edit") Edit Profile             
-                        
-                        li
-                            a(href="/users/logout") Log Out             
-                        li
-                            a(href="/my-profile") #{loggedInUser.name}의 Profile
-                    else 
-                        li
-                            a(href="/login") Login              
-                        li
-                            a(href="/join") Join
-        main
-            block content
-    include partials/footer
-    script(src="/static/js/main.js")
+        include partials/header 
+        main 
+            block content 
+        include partials/footer
+    block scripts
+    //- script(src="/static/js/main.js")
     //- 우리가 client에 세련된 코드를 짜면 webpack 이 그걸처리해서 assets폴더로 코드를 압축시켜 보내고 pug는 assets폴더를 읽어 화면에 띄운다

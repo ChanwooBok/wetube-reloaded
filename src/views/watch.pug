@@ -3,16 +3,36 @@ extends base
 block content
     //- h3 #{video.views} #{video.views === 1 ? "view" : "views"}
     //- 단수, 복수 구분해준다. if조건문대신 이렇게 쓸 수도 있다.
-    video(src="/"+video.fileUrl, controls) 
-    p=video.description
-    small= video.createdAt
-    br
-    small  Uploaded By 
-        a(href=`/users/${video.owner._id}`) #{video.owner.name}
-    <br>
-    if String(loggedInUser._id) === String(video.owner._id) 
-        a(href=`${video.id}/edit`) Edit Video &larr; 
-        <br>
-        a(href=`${video.id}/delete`) Delete Video &larr; 
+    div#videoContainer
+        video(src="/"+video.fileUrl)
+        //- video(src="/"+video.fileUrl, controls)  우리가 만든 control 있으니 지워도 된다.
 
+        div#videoControls 
+            button#play play 
+            button#mute Mute 
+            input(type="range",step="0.1",min="0",value = 0.5 ,max="1")#volume
+            //- step : 마우스로 클릭하고 이동할때 0.1단위로 움직인다.
+            //- min ~ max : range의 시작과 끝을 정해줌. (일반적으로 볼륨은 0~1로 세팅)
+
+            div 
+                span#currentTime 00:00
+                span  / 
+                span#totalTime 00:00
+            div 
+                input(type="range",step="1",value="0",min="0")#timeline
+            div 
+                button#fullScreen Enter full Screen 
+    //- div 
+    //-     p=video.description
+    //-     small= video.createdAt
+    //- div 
+    //-     small  Uploaded By 
+    //-         a(href=`/users/${video.owner._id}`) #{video.owner.name}  
+    //- if String(loggedInUser._id) === String(video.owner._id) 
+    //-     a(href=`${video.id}/edit`) Edit Video &larr; 
+    //-     <br>
+    //-     a(href=`${video.id}/delete`) Delete Video &larr; 
+
+block scripts
+    script(src= "/static/js/videoPlayer.js")
     

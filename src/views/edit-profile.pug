@@ -5,10 +5,10 @@ block content
         span=errorMessage
     if (errorMessages !== null ) 
         span(style = "color : red")=errorMessages 
-    img(src="/"+loggedInUser.avatarUrl, width="100",heigt="100")
+    img(src="/"+loggedInUser.avatarUrl, width="100",heigt="100").edit-profile__avatar
     //- "/"을 붙여주지 않으면 , relative Url 이 되어 현재위치인 /users/uploas/이미지명 이 되버린다.
     //- "/"을 붙여주면, /uploads/이미지명 이 된다. -> 그래도 그림이 안보이는 이유: express한테 /uploads/이미지명 router을 만들어주지 않았기 떄문.
-    form(method="POST", enctype = "multipart/form-data" )
+    form(method="POST", enctype = "multipart/form-data" ).edit-profile__form
         label(for="avatar") Avatar
         input(type="file",id="avatar", name = "avatar",accept="image/*")
         //- image/* : jpeg,png 등은 모두 허용한다는 의미.
@@ -18,8 +18,8 @@ block content
         input(placeholder="location",name= "location", type="text", value = loggedInUser.location)
         input(type="submit", value="Update Profile")
         if( !loggedInUser.socialOnly )
-            hr
-            a(href="change-password") Change password &rarr;
+            div.edit-profile__password
+                a(href="change-password") Change password &rarr;
             //- res.local.loggedInUser 에 user값을 받아오고 있으므로,pug에서는 loggedInUser만 쓰면 local에 접근가능( 복습 )
         //- 현재 이 pug파일은 /users에 머무르고 있으므로, 따로 /users/change-password 안하고 생략가능하다. 
 

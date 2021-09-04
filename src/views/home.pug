@@ -2,6 +2,7 @@ extends base
 include mixins/video
 
 block content 
+    div.video-grid
         each potato in videos
             //- div 
             //-     h4=video.title
@@ -12,6 +13,18 @@ block content
             //-         li #{video.views} views.
             //- 앞으로 자주 쓸거라서 반복하기 싫다. mixin쓰자
             +video(potato)
+            +video(potato)
+            +video(potato)
+            +video(potato)
+            +video(potato)
+            +video(potato)
+            +video(potato)
+            +video(potato)
+            +video(potato)
+            +video(potato)
+            +video(potato)
+            +video(potato)
+            +video(potato)
         else 
-            li sorry Not Found .
+            span.empty__message No videos found
             //- 여기 else 구문은 JS 가 아닌, pug만의 문법이다.
