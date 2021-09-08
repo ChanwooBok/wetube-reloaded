@@ -1,7 +1,8 @@
 mixin video(info)
     //- mixin은 html을 return 해주는 일종의 function을 가지고 있다.
     a(href=`/videos/${info.id}`).video-mixin
-        div.video-mixin__thumb 
+        div.video-mixin__thumb
+                        img(src= info.thumbUrl,alt = "thumbnail", size= cover)
         div.video-mixin__data
             span.video-mixin__title=info.title
             //- a(href=`/videos/${info.id}`)=info.title
@@ -12,5 +13,6 @@ mixin video(info)
             //- small= info.createdAt
             //- hr
             div.video-mixin__meta
-                span #{info.owner.name}
+                //- span #{info.owner.name}
                 span #{info.meta.views}회
+                

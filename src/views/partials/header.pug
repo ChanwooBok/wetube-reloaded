@@ -18,7 +18,8 @@ header
                         if loggedInUser.avatarUrl === ""
                             span 😁
                         else
-                            img(src="/"+loggedInUser.avatarUrl).header__avatar
+                            img.header__avatar(src="/"+loggedInUser.avatarUrl,crossorigin)
+                            //- img(src="/"+loggedInUser.avatarUrl).header__avatar
                         
                         
                     

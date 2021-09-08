@@ -3,36 +3,62 @@ extends base
 block content
     //- h3 #{video.views} #{video.views === 1 ? "view" : "views"}
     //- 단수, 복수 구분해준다. if조건문대신 이렇게 쓸 수도 있다.
-    div#videoContainer
+    div#videoContainer(data-id = video._id)
         video(src="/"+video.fileUrl)
         //- video(src="/"+video.fileUrl, controls)  우리가 만든 control 있으니 지워도 된다.
-
-        div#videoControls 
-            button#play play 
-            button#mute Mute 
-            input(type="range",step="0.1",min="0",value = 0.5 ,max="1")#volume
-            //- step : 마우스로 클릭하고 이동할때 0.1단위로 움직인다.
-            //- min ~ max : range의 시작과 끝을 정해줌. (일반적으로 볼륨은 0~1로 세팅)
-
-            div 
-                span#currentTime 00:00
-                span  / 
-                span#totalTime 00:00
-            div 
-                input(type="range",step="1",value="0",min="0")#timeline
-            div 
-                button#fullScreen Enter full Screen 
+        //- (data-id = video._id) 를 data attribute라고 한다.이걸로 pug가 js에게 변수나 값을 주고 소통할 수 있다.
+        div#videoControls.videoControls
+            div.videoControls__play
+                span#play.videoControls__playBtn
+                    i.fas.fa-play
+                div.videoControls__time
+                    span#currentTime 00:00
+                    span  / 
+                    span#totalTime 00:00
+            input(type="range",step="1", value="0", min="0")#timeline.videoControls__timeline
+            div.videoControls__volume
+                input(type="range",step="0.1", value=0.5, min="0", max="1")#volume
+                span#mute
+                    i.fas.fa-volume-up
+                span#fullScreen
+                    i.fas.fa-expand
+    div.video__data
+        p.video__title=video.title
+        small.video__owner Uploaded by 
+            a(href=`/users/${video.owner._id}`)=video.owner.name
+        small.vidoe_createdAt=new Date(video.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})
+        if String(loggedInUser._id) === String(video.owner._id) 
+            a(href=`${video.id}/edit`) Edit Video &larr; 
+            <br>
+            a(href=`${video.id}/delete`) Delete Video &larr; 
+    if loggedIn
+        div.video__add-comments
+            form.video__comment-form#commentForm
+                textarea(cols="30", rows="10",placeholder="Write a comment")
+                button Add comment 
+    div.video__comments
+        ul
+            //- each comment in video.comments.reverse()
+            //-     li#video__comment.video__comment(data-id=comment.id)
+            //-         i.fas.fa-comment
+            //-         span #{comment.text}
+            //-         if String(loggedInUser._id) === String(video.owner._id) 
+            //-             span#deleteBtn.deleteBtn 🍘 
+            //- video.comments를 쓰려면 반드시 video를 찾을때 comments를 populate해야 한다.
+            //- data-id를 받는다면 id를 가지고 delete request를 보낼 수 있다
     //- div 
     //-     p=video.description
     //-     small= video.createdAt
     //- div 
     //-     small  Uploaded By 
     //-         a(href=`/users/${video.owner._id}`) #{video.owner.name}  
-    //- if String(loggedInUser._id) === String(video.owner._id) 
-    //-     a(href=`${video.id}/edit`) Edit Video &larr; 
-    //-     <br>
-    //-     a(href=`${video.id}/delete`) Delete Video &larr; 
 
 block scripts
     script(src= "/static/js/videoPlayer.js")
-    
+    if loggedIn
+        script(src="/static/js/commentSection.js")
+
+
+            //- 20번쨰 줄 볼륨 range input 부가설명   
+            //-  step : 마우스로 클릭하고 이동할때 0.1단위로 움직인다.
+            //-  min ~ max : range의 시작과 끝을 정해줌. (일반적으로 볼륨은 0~1로 세팅) 

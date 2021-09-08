@@ -1,3 +1,5 @@
+include mixins/message
+
 doctype html
 html(lang="ko")
     head
@@ -8,10 +10,17 @@ html(lang="ko")
         //- 글씨체를 기본적으로 멋지게 꾸며준다.
         link(rel="stylesheet", href="/static/css/styles.css")
     body
+        if messages.error 
+            +message("error",messages.error)
+        if messages.info 
+            +message("info",messages.info)    
+        if messages.success 
+            +message("success",messages.success)
+
         include partials/header 
         main 
             block content 
         include partials/footer
+    script(src="/static/js/main.js")
     block scripts
-    //- script(src="/static/js/main.js")
     //- 우리가 client에 세련된 코드를 짜면 webpack 이 그걸처리해서 assets폴더로 코드를 압축시켜 보내고 pug는 assets폴더를 읽어 화면에 띄운다

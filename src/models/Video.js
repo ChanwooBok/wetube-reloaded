@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 const videoSchema = new mongoose.Schema( {
     title:{type:String,required:true,trim:true, maxLength:80},
     fileUrl:{type: String, required: true},
+    thumbUrl: { type: String, required: true },
     description: {type:String,required:true,trim:true, minLength:20},
     createdAt: {type: Date, required:true ,default:Date.now},
     hashtags: [{type:String, trim:true}],
@@ -11,6 +12,10 @@ const videoSchema = new mongoose.Schema( {
         views:{type: Number,required:true,default:0},
         rating:{type: Number,required:true,default:0},
     },
+    comments: [ 
+        { type: mongoose.Schema.Types.ObjectId, ref: "Comment"}
+    ],
+
     owner: {type: mongoose.Schema.Types.ObjectId, required:true, ref: "User"},
     // type에 objectId는 없다. mongoose가 우리르 도와주게 하려면, 이렇게 써야하고, ref로 User model에서 온것이라고 적어줘야 한다.
     // 영상소유자의 id를 Video에 저장하는게 이렇게나 효과적이다.

@@ -1,5 +1,5 @@
 import express from "express";
-import {logout,remove,startGithubLogin,finishGithubLogin,getEdit,postEdit,getChangePassword,postChangePassword, see} from "../controllers/userController.js";
+import {logout,remove,startGithubLogin,finishGithubLogin,getEdit,postEdit,getChangePassword,postChangePassword, see,createComment} from "../controllers/userController.js";
 import { protectorMiddleware, publicOnlyMiddleware, avatarUpload} from "../middlewares.js";
 
 const userRouter = express.Router();
@@ -25,5 +25,9 @@ userRouter.get("/github/finish",publicOnlyMiddleware,finishGithubLogin);
 // < My profile 작업>
 userRouter.get("/:id", see);
 
+
+
+//  < comment 달기 : apiRouter이 안되서 여기다가 함> 
+userRouter.post("/videos/:id([0-9a-f]{24})/comment", createComment);
 
 export default userRouter;

@@ -1,6 +1,10 @@
+import fetch from "node-fetch";
+
 const video = document.querySelector("video")
 const playBtn = document.getElementById("play");
+const playBtnIcon = playBtn.querySelector("i");
 const muteBtn = document.getElementById("mute");
+const muteBtnIcon = muteBtn.querySelector("i");
 const time = document.getElementById("time");
 const volumeRange = document.getElementById("volume");
 const currentTime = document.getElementById("currentTime");
@@ -18,7 +22,8 @@ const handlePlayClick  = (e) => {
     }else{
         video.pause();
     }
-    playBtn.innerText = video.paused ? "Play" : "Pause"    
+    // playBtn.innerText = video.paused ? "Play" : "Pause"    
+    playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause"
 };
 
 // const handlePause = () => { playBtn.innerText = "Play"};
@@ -40,27 +45,35 @@ volumeRange.addEventListener("input",handleVolumeChange);
 // input : 내가 매번 클릭하고 이동할 떄 마다 일어나는 event임
 
 
-const handleMute = (e) => {
+const handleMuteClick = (e) => {
     if(video.muted){
         video.muted = false;
     }else{
         video.muted = true;
     }
-    muteBtn.innerText = video.muted ? "Unmute" : "Mute";
+    // muteBtn.innerText = video.muted ? "Unmute" : "Mute";
+    muteBtnIcon.classList = video.muted ? "fas fa-volume-mute" : "fas fa-volume-up"
     volumeRange.value = video.muted ? 0 : volumeValue;
     // volumeValue값을 따로 지정해준 이유 : mute했다가 다시 unmute했을 때 , 원래 유저가 세팅한 볼륨값을 돌려주고 싶어서.
 }
 
+document.addEventListener('keydown', (e) => {
+    if (e.key === "m") {
+        handleMuteClick();
+    }
+});
+//  m버튼을 클릭으로 음소거 조절하기.
+
 
 playBtn.addEventListener("click",handlePlayClick);
-muteBtn.addEventListener("click",handleMute);
+muteBtn.addEventListener("click",handleMuteClick);
 // video.addEventListener("play",handlePlay);
 // video.addEventListener("pause",handlePause);
 
 // < video 플레이어 의 진행시간 표시하기 > 
 
 const formatTime = (seconds) => 
-    new Date(seconds * 1000).toISOString().substr(11, 8);
+    new Date(seconds * 1000).toISOString().substr(14, 5);
     // 왜 여기서 => 다음을 {}로 감싸면 작동이 안되는 걸까?
 
 
@@ -77,7 +90,7 @@ const handleTimeUpdate = () => {
     // player를 조절함으로써, timeline을 컨트롤 할 수 있게 됨.
 }
 
-video.addEventListener("loadedmetadata",handleLoadedMetadata);
+video.addEventListener("loadeddata",handleLoadedMetadata);
 // loadedmetadata : metadata란 video에서 영상을 제외한 나머지 모든것들을 의미함. 예) 비디오 길이, 비디오 시간, 비디오 볼륨..등등모든것들
 // (html에서 기본적으로 제공하는 video의 attribute중 하나임)
 video.addEventListener("timeupdate",handleTimeUpdate);
@@ -94,12 +107,14 @@ const handleTimelineChange = (event) =>{
     // timeline을 조절함으로써 player의 비디오 시간을 컨트롤 하게 만듦.
 }
 
+
 timeline.addEventListener("input",handleTimelineChange);
 
 
 // < API를 이용한 Full screen 버튼 세팅 > 
 
 const fullScreenBtn = document.getElementById("fullScreen");
+const fullscreenIcon = fullScreenBtn.querySelector("i");
 const videoContainer = document.getElementById("videoContainer");
 // videoContainer로 통쨰로 묶어준 이유 : video.requestFullscreen하면 video만 커지고 각종 버튼들은 안 커지는 오류 발생해서.
 
@@ -109,15 +124,25 @@ const handleFullscreen = () => {
     if(fullscreen){
         document.exitFullscreen();
         // document차원에서 불러야 한다.
-        fullScreenBtn.innerText = "Enter Full Screen"
+        // fullScreenBtn.innerText = "Enter Full Screen"
+        fullscreenIcon.classList = "fas fa-expand";
     }else{
         videoContainer.requestFullscreen();
         // element차원에서 불러야 한다.
-        fullScreenBtn.innerText = "Exit Full Screen"
+        // fullScreenBtn.innerText = "Exit Full Screen"
+        fullscreenIcon.classList = "fas fa-compress";
     }
 };
 
 fullScreenBtn.addEventListener("click",handleFullscreen);
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === "f") {
+        handleFullscreen();
+    }
+});
+
+
 
 // < 마우스를 창에 둘때,떠날때 비디오 컨트롤이 생기고 사라지게 만들기 > 
 
@@ -154,8 +179,37 @@ const handleMouseMove = () => {
 const handleMouseLeave = () => {
     controlsTimeout = setTimeout( hideControls, 3000);
     // controlsTimeout이라고 아예 정해주었음. 그래야 clear 할 수 있으니까.
-}
+};
 
-video.addEventListener("mousemove",handleMouseMove);
-video.addEventListener("mouseleave",handleMouseLeave)
-// 다양한 mouse action이 있음.
+videoContainer.addEventListener("mousemove",handleMouseMove);
+videoContainer.addEventListener("mouseleave",handleMouseLeave);
+// video.addeventListenr였다가 videoContainer로 바꾼이유:
+// video만 하면 mouse로 볼륨조절을 하고 있다가 3초 지나면 showing이 사라져버림
+// 이는 mouse액션을 videoContainer전체로(볼륨창까지) 해당하게 하면 해결되는 버그이다.
+
+
+//  < video를 클릭or 스페이스바 쳤을때 재생/정지 세팅 - 유튜브처럼.. > 
+
+const handleEnter = () => {
+    if(video.paused){
+        video.play();
+    }else{
+        video.pause();
+    }
+    playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause"
+}
+video.addEventListener("click",handleEnter);
+// 마우스로 클릭했을때
+document.addEventListener('keyup', event => {
+    if (event.code === 'Space') {
+        handleEnter();
+        videoControls.classList.add("showing");
+        setTimeout(hideControls,8000);
+    }
+  });
+//  스페이스바 쳤을때
+
+
+
+
+

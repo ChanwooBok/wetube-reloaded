@@ -43,7 +43,8 @@ export const home = async(req,res) => {
 export const watch = async(req,res) => {
     const { id } = req.params;
     // const id = req.params.id 와 동일 표현.위에껀 ES6스타일 
-    const potato = await Video.findById(id).populate("owner");
+    const potato = await Video.findById(id).populate("owner").populate("comments");
+    console.log(potato);
     // mongoose가 video를 찾고 , owner 가 ObjectId이며, id가 User에서 온 것도 알고 있으며, owner의 전체 객체  User object를 가져와준다.-> 우리는 user의 구체적인 정보까지 한줄의 코드로 알 수 있다.
     // populate를 하기전에는 owner은 단지, String타입의 objectId 일 뿐이다.
     // const owner = await User.findById(potato.owner); ->너무 번거로운 코드반복을 줄일  수 있는것이다.
@@ -74,6 +75,7 @@ export const getEdit = async(req,res) => {
     // console.log(String(potato.owner), String(_id));
     if( String(potato.owner) !== String(_id)){
         // 두개는 object와 string으로 타입이 다르다. !==는 데이터타입까지 비교하므로 형변환해주기.
+        req.flash("error","NOT authorized");
         return res.status(403).redirect("/");
     }
     return res.render("edit",{pageTitle: `Edit ${potato.title}` , potato });
@@ -94,6 +96,7 @@ export const postEdit = async(req,res) => {
     } //error가 있는지 체크하고,
     if( String(potato.owner) !== String(_id)){
         // 두개는 object와 string으로 타입이 다르다. !==는 데이터타입까지 비교하므로 형변환해주기.
+        req.flash("error", "You are not the the owner of the video.");
         return res.status(403).redirect("/");
     }
     await Video.findByIdAndUpdate(id, {
@@ -111,6 +114,7 @@ export const postEdit = async(req,res) => {
     // 즉, form에 입력한 값(title,description,hashtags는 req.body로 받아올 수 있다.
     
     // console.log(potato); -> output: First video
+    req.flash("success","Changes saved");
     return res.redirect(`/videos/${id}`);
     // redirect는 요청한 곳으로 이동시켜줌.
 };
@@ -128,11 +132,18 @@ export const postUpload = async(req,res) => {
     const { user: {_id},} = req.session;                                
     const {title , description,hashtags} = req.body;
     // const video = new Video 이렇게 object형식으로 만들수도 있고,또는 아래와같이 만들수도 있다.
-    const {path : fileUrl} = req.file;
+    const { video,thumb} = req.files;
+    // fields로 파일2개(영상업로드,썸네일업로드)를 받으므로, req.file이 아니라 req.files이다. single이었으면 req.file이었을것.
+    // video -> MyRecording을 첫번쨰 원소로 가지는 배열, thumb -> MyThumbnail을 첫번째원소로 가지는 배열 -> 즉, 각각은 배열이다.
+    // const {path : fileUrl} = req.file; -> single이라서 file단수다.(video만 업로드 할 땐 multer-> single로 썼다.)
+    // form에 올려서 post한 파일이 req.file에 담겨있다.
+
     try{
     const newVideo = await Video.create( {
         title,
-        fileUrl,
+        fileUrl: video[0].path,
+        thumbUrl: thumb[0].path,
+        // 위에서 선언한 req.files의 객체인 video랑 thumb array의 첫번째원소의 element 인 path이다.(URL)
         description,
         hashtags:Video.formatHashtags(hashtags),
         meta: {
@@ -149,9 +160,10 @@ export const postUpload = async(req,res) => {
     // videos array에 새로 업로드하는 video의 id를 추가한다.
     user.save();
     res.redirect("/");
+    req.flash("info","Upload Completed");
 }catch(error){
     return res.status(400).render("upload", { 
-        pageTitle:"Upload Video" ,
+        pageTitle:"Uspload Video" ,
         errorMessage:error._message,
     });
 }
@@ -199,5 +211,6 @@ export const search = async(req,res) => {
         }).populate("owner");
     }
     return res.render("search", {pageTitle : "Search" , videos});
-}
+};
+
 

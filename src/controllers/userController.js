@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 import Video from "../models/Video.js";
+import Comment from "../models/Comment.js";
 
 export const remove = (req,res) => res.send("Remove");
 
@@ -294,11 +295,15 @@ export const postEdit = async(req,res) => {
 
 export const logout = (req,res) => {
     req.session.destroy();
+    req.flash("info", "Bye Bye");
     return res.redirect("/");
 };
 
 // < Change password > 
 export const getChangePassword = (req,res) => {
+    if(req.session.user.socialOnly === true){
+        req.flash("error","Can't change password.");
+    }
     return res.render("users/change-password", {pageTitle : "Change-password" });
     // change-password 를 users라는 folder안에 넣어주었으므로, 경로를 설정해주었다.
 }
@@ -332,6 +337,7 @@ export const postChangePassword = async(req,res) => {
     // save()는 promise타입이다. 왜냐면 Db에 정보를 저장하는데는 시간이 걸리기때문이다. -> await를 써주자.
     req.session.user.password = user.password; 
     // session에 있는 password 도 업데이트 해줘야 한다.  ---> 이게 좀 이해가 안 가기는 함.
+    req.flash("info", "password Updated");
     return res.redirect("logout");
 }
 
@@ -365,6 +371,40 @@ export const see = async(req,res) => {
         // videos,
     });
 }
+
+// < comment 달기 : api Router이 안되서 여기다가함>
+
+export const createComment = async(req,res) => {
+    // console.log(req.session.user);
+    // fetch request로 현재 머물고 있는 URL과 동일한 URl( localhost4000 -> localhost4000) 에 정보를 보내고 있으므로, 브라우저는 우리가 같은 frontend에서 backend로 보내는것을 알기 때문에 
+    // 쿠키의 원칙에 따라 우리는 쿠키를 자동적으로 받을 수 있다.우리 backend는 쿠키를 이해할 수 있기때문에 우리는 쿠키에서 사용자정보를 받아올 수 있다.
+
+    // const { id } = req.params;
+    // const { text } =req.body;
+    // const { session: {user},} = req;
+    const { 
+        params: { id },
+        // 현재 페이지의 비디오의 id 를 따온다.
+        body: { text },
+        session: { user },
+    } = req;
+    const video = await Video.findById(id);
+    // 우선, 현재 켜진 비디오를 database에서 찾는다.
+    if(!video){
+        return res.sendStatus(404);
+        // sendStatus 와 Status 의 차이점 : sendStatus는 코드 보내고 종료시켜버린다.
+    }
+    const comment = await Comment.create({
+        text,
+        owner: user._id,
+        video: id,
+    });
+    // comment라는 모델 이용해 생성
+    video.comments.push(comment._id);
+    video.save();
+    return res.status(201).json({newCommentId: comment._id})
+    // 201(생성완료) 코드를 보낼뿐아니라, comment의 id까지 보내줄것이다. 왜냐면 댓글을 delete request하려면 사용자의 id가 필요하기때문이다.
+};
 
 
 // C:\Program Files\MongoDB\Server\5.0\bin

@@ -2,12 +2,17 @@ extends base
 
 
 block content 
+    div.upload__container
+        div.upload__video
+            video#preview
+            button#actionBtn Start Recording
     if errorMessage
         span=errorMessage
-    
     form(method = "POST", enctype ="multipart/form-data")
         label(for="video") Video File 
         input(type="file",accept="video/*",required,id="video",name = "video") 
+        label(for="thumb") Thumbnail File
+        input(type="file",accept="image/*",required,id="thumb",name="thumb")
         input( name = "title" , placeholder="Title" , required, type="text",maxlength=80)
         input( name = "description" , placeholder="Description" , required, type="text",minlength=20)
         //- video.js에도 videoschema에 길이제약을 걸었늗네 여기서 또 거는 이유:
@@ -19,4 +24,6 @@ block content
         //- Upload video를 누르는 순간, post request 를 우리의 /videos/upload url에 보낸다.
 
     //- form의 action 기본값은 현재 머물고있는 화면의 url이다. 즉, 여기서는 /videos/upload이다. 
-    
+
+block scripts
+    script(src="/static/js/recorder.js")

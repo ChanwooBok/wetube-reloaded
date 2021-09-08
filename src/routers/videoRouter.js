@@ -21,7 +21,11 @@ videoRouter.route("/:id([0-9a-f]{24})/edit").all(protectorMiddleware).get(getEdi
 videoRouter.get("/:id([0-9a-f]{24})/delete",protectorMiddleware,deleteVideo);
 
 
-videoRouter.route("/upload").all(protectorMiddleware).get(getUpload).post(videoUpload.single("video"),postUpload);
+videoRouter.route("/upload").all(protectorMiddleware).get(getUpload)
+.post(videoUpload.fields([{name: "video"} ,{name: "thumb"}]),postUpload);
+// .post(videoUpload.single("video"), postUpload);
+// upload할때 multer를 쓰고 있었는데,  원래는 video영상 하나만 올릴거라 single을 썼지만, 이젠 영상,썸네일 이미지도 올려야 하니까 fields를 써준다.
+// fields 안에는 파일을 받는 input의 name을 써준다.
 // route로 위 한줄로 짧게 가능
 // videoRouter.get("/upload",getUpload);
 // videoRouter.post("/upload",postUpload);

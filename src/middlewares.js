@@ -22,6 +22,7 @@ export const protectorMiddleware = (req,res,next) => {
         // 로그인 안한 사람이 edit페이지로 가는걸 막기위함( /users/edit)
         //user가 로그인 되어있다면 요청을 계속하도록 하고
     }else{
+        req.flash("error","Log in first.");
         return res.redirect("/login");
         //user가 로그인 되어있지 않다면 login페이지로 보낸다.
     }
@@ -32,6 +33,7 @@ export const publicOnlyMiddleware = (req,res,next) => {
         return next();
         // 이미 로그인 한 유저가 login페이지로 가는걸 막기위함.->logout한 유저만 실행하도록 허락하는 미들웨어
     }else{
+        req.flash("error","NOT authorized");
         return res.redirect("/");
     }
 };

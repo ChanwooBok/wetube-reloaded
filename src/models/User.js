@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
     // social login했을 시, password가 필요없으므로 required:true를 뺴줬다.
     name: {type:String, required:true},
     location: String,
+    comments: [ { type: mongoose.Schema.Types.ObjectId, ref: "Comment"}],
     videos:[{type: mongoose.Schema.Types.ObjectId,ref: "Video"}],
     // User에 videos라는 array를 만들어준다. -> video를 여러개 가질 수 있다.-> 배열로 만든 이유
 });

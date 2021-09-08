@@ -6,11 +6,14 @@ const path = require("path");
 // import path from "path";
 console.log(path.resolve(__dirname, "assets", "js"));
 //C:\Users\Chanwoo\Desktop\wetube\assets\js 와 같이 현재경로(dir)와 이후 이어지는 경로를 이어준다. /를 쓸 필요가 없음.
+const BASE_JS = "./src/client/js/";
 
 module.exports = {
     entry: { 
-        main: "./src/client/js/main.js",
-        videoPlayer: "./src/client/js/videoPlayer.js",
+        main: BASE_JS + "main.js",
+        videoPlayer: BASE_JS + "videoPlayer.js",
+        recorder: BASE_JS + "recorder.js",
+        commentSection: BASE_JS + "commentSection.js",
     },
     // entry를 object화 시켜서 2가지 항목을 써준다. 
     plugins: [
